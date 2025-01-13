@@ -1,7 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 
+# url
 base_url = "https://www.scrapethissite.com/pages/forms/"
+
+# query de el/los equipo/s a mostrar
 query = "New York"
 
 # Almacenar los resultados

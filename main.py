@@ -1,16 +1,25 @@
 import requests
 from bs4 import BeautifulSoup
 
+# URL
 url = "https://www.scrapethissite.com/pages/simple/"
+
+# Obtener datos
 response = requests.get(url)
 soup = BeautifulSoup(response.text, "html.parser")
 
-country_names = [tag.text.strip() for tag in soup.find_all("h3", class_="country-name")]
-country_pop = [tag.text.strip() for tag in soup.find_all("span", class_="country-population")]
+# Extraer datos
+countries_data = [
+    (tag.text.strip(), int(pop.text.strip()))
+    for tag, pop in zip(
+        soup.find_all("h3", class_="country-name"),
+        soup.find_all("span", class_="country-population")
+    )
+]
 
-countries_data = list(zip(country_names, country_pop))
+# Ordenar
+top_countries = sorted(countries_data, key=lambda x: x[1], reverse=True)[:10]
 
-countries_data.sort(key=lambda x: int(x[1].strip()), reverse=True)
-
-for country, population in countries_data[:10]:
-  print(f"{country} - population: {population}")
+# Imprimir
+for country, population in top_countries:
+    print(f"{country} - population: {population:,.0f}".replace(",", "."))
